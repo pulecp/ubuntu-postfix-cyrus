@@ -19,7 +19,7 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
 ##### 1) /etc/imapd.conf 
 
     admins: cyrus                             #edit line, nod add!!! (otherwise create mailbox “cm user.name” ends with permision denied)
-    altnamespace: yes  			              #edit line, not add!!!
+    altnamespace: yes      		              #edit line, not add!!!
     allowplaintext: yes				          #edit line, not add!!!
     sasl_mech_list: PLAIN				      #edit line, not add!!!
     sasl_minimum_layer: 2				      #edit line, not add!!!
@@ -86,12 +86,12 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
     cyradm -u cyrus localhost 	    #log into cyrus “shell” as admin
     cm user.name  		            #create mailbox name@example.com
     saslpasswd2 name		        #change password to mailbox name@example.com
-    useradd kayn; passwd kayn	    #add user and change password to mailbox name@example.com
+    useradd name; passwd name	    #add user and change password to mailbox name@example.com
     
     #delete mailbox
     cyradm -u cyrus localhost
-    sam user.kayn cyrus all #(I don't know why not work sufficient delete permission by "sam user.kayn cyrus d")
-    dm user.kayn
+    sam user.name cyrus all #(I don't know why not work sufficient delete permission by "sam user.name cyrus d")
+    dm user.name
     
 ##### 10) some debugging commands
 
@@ -103,10 +103,10 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
     ...more google it
     
     #other check smtps
-    openssl s_client -connect smtp.kayn.tk:465 -state -debug
+    openssl s_client -connect smtp.example.com:465 -state -debug
         
     #check imap
-    telnet smtp.kayn.tk 143
+    telnet smtp.example.com 143
     whatever login username password
     
     #you can add this line to /etc/postfix/main.cf
