@@ -18,9 +18,9 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
 
 ##### 1) /etc/imapd.conf 
 
-    uncomment "admins: cyrus"         #otherwise create mailbox “cm user.name” ends with permision denied
-    altnamespace: yes  			          #edit line, not add!!!
-    allowplaintext: yes				        #edit line, not add!!!
+    admins: cyrus                             #edit line, nod add!!! (otherwise create mailbox “cm user.name” ends with permision denied)
+    altnamespace: yes  			              #edit line, not add!!!
+    allowplaintext: yes				          #edit line, not add!!!
     sasl_mech_list: PLAIN				      #edit line, not add!!!
     sasl_minimum_layer: 2				      #edit line, not add!!!
     sasl_pwdcheck_method: saslauthd	  #add new line
