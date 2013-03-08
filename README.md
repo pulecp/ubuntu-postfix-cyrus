@@ -23,7 +23,7 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
     allowplaintext: yes				          #edit line, not add!!!
     sasl_mech_list: PLAIN				      #edit line, not add!!!
     sasl_minimum_layer: 2				      #edit line, not add!!!
-    sasl_pwdcheck_method: saslauthd	  #add new line
+    sasl_pwdcheck_method: saslauthd     	  #add new line
 
 ##### 2) /etc/postfix/main.cf
 
@@ -83,14 +83,14 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
 ##### 9) some basic commands
 
     passwd cyrus		          	#change password to cyrus admin account
-    cyradm -u cyrus localhost 	#log into cyrus “shell” as admin
-    cm user.name  		          #create mailbox name@example.com
+    cyradm -u cyrus localhost 	    #log into cyrus “shell” as admin
+    cm user.name  		            #create mailbox name@example.com
     saslpasswd2 name		        #change password to mailbox name@example.com
-    useradd kayn; passwd kayn	  #add user and change password to mailbox name@example.com
+    useradd kayn; passwd kayn	    #add user and change password to mailbox name@example.com
     
     #delete mailbox
     cyradm -u cyrus localhost
-    sam user.kayn cyrus all (I don't know why not work sufficient delete permission by "sam user.kayn cyrus d")
+    sam user.kayn cyrus all #(I don't know why not work sufficient delete permission by "sam user.kayn cyrus d")
     dm user.kayn
     
 ##### 10) some debugging commands
