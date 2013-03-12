@@ -98,6 +98,10 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
 
     saslfinger -s
     
+    #check imap and smtp
+    smtptest -u user -a user
+    imtest -u user -a user
+    
     #check smtps
     telnet example.com 465
     ehlo example.com
@@ -109,6 +113,7 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
     #check imap
     telnet smtp.example.com 143
     whatever login username password
+    
     
     #you can add this line to /etc/postfix/main.cf
     debug_peer_list = example.com
