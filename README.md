@@ -58,6 +58,7 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
 ##### 5) /etc/postfix/sasl/smtpd.conf (create new file)
     
     pwcheck_method: saslauthd
+    mech_list: PLAIN LOGIN
     
 ##### 6) change saslauth location because postfix runs chrooted
 
