@@ -38,24 +38,28 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
     mydomain = example.com                                              #add new line
     mydestination = $myhostname, $mydomain, mail.$mydomain, localhost   #edit line, not add!!!
     mailbox_transport = cyrus                                           #add new line
-    smtpd_sasl_auth_enable = yes                                        #add new line
+    
+    virtual_alias_maps = hash:/etc/postfix/virtual, mysql:/etc/postfix/mysql-virtual.cf #add new line
+    sender_canonical_maps = mysql:/etc/postfix/mysql-canonical.cf                       #add new line
     broken_sasl_auth_clients = yes                                      #add new line
-    smtpd_sasl_type = cyrus                                             #add new line
     cyrus_sasl_config_path = /etc/postfix/sasl                          #add new line
     smtpd_sasl_security_options = noanonymous                           #add new line
     smtpd_recipient_restrictions =                                      #add new line
         permit_mynetworks,                                              
         permit_sasl_authenticated,
         reject_unauth_destination
-    cyrus_destination_recipient_limit = 1                               #add new line
     
-##### 3) /etc/default/saslauthd
+##### 3) copy some postfix configuration files (I suppose you clone this repository into /root directory)
+
+    cp /root/ubuntu-postfix-cyrus/etc/postfix/* /etc/postfix
+
+##### 4) /etc/default/saslauthd
 
     START=yes
     OPTIONS="-c -m /var/spool/postfix/var/run/saslauthd"    #edit line, not add!!!
     PARAMS="-c -m /var/spool/postfix/var/run/saslauthd"     #I think it isn't needed more
 
-##### 4) /etc/postfix/master.cf (uncomment following, edit "argv=" parameter with path to deliver!!!, and comment what you don't need)
+##### 5) /etc/postfix/master.cf (uncomment following, edit "argv=" parameter with path to deliver!!!, and comment what you don't need)
 
     cyrus unix - n n - - pipe
     flags=R user=cyrus argv=/usr/sbin/cyrdeliver -e -m "${extension}" ${user}
@@ -63,12 +67,12 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
     smtps     inet  n       -       -       -       -       smtpd
     
     
-##### 5) /etc/postfix/sasl/smtpd.conf (create new file)
+##### 6) /etc/postfix/sasl/smtpd.conf (create new file)
     
     pwcheck_method: saslauthd
     mech_list: PLAIN LOGIN
     
-##### 6) change saslauth location because postfix runs chrooted
+##### 7) change saslauth location because postfix runs chrooted
 
     rm -r /var/run/saslauthd/
     mkdir -p /var/spool/postfix/var/run/saslauthd
@@ -77,19 +81,19 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
     adduser postfix sasl                                    #adding postfix to sasl group
     
     
-##### 7) change cyrus admin password
+##### 8) change cyrus admin password
 
     saslpasswd2 -c cyrus
     passwd cyrus
     
-##### 8) restart services
+##### 9) restart services
 
     /etc/init.d/cyrus-imapd restart
     /etc/init.d/postfix restart
     /etc/init.d/saslauthd restart
     
     
-##### 9) some basic commands
+##### 10) some basic commands
 
     passwd cyrus		          	#change password to cyrus admin account
     cyradm -u cyrus localhost 	    #log into cyrus “shell” as admin
@@ -102,7 +106,7 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
     sam user.name cyrus all #(I don't know why not work sufficient delete permission by "sam user.name cyrus d")
     dm user.name
     
-##### 10) some debugging commands
+##### 11) some debugging commands
 
     saslfinger -s
     
@@ -163,11 +167,14 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
     mysql < insertuser_mysql.sql
     mysql mail -u mail -p < create_mysql.sql        #password is 'secret'
     
-##### 6) Copy some postfix configuration files
+##### 6) restart all services
 
-    cp /root/ubuntu-postfix-cyrus/etc/postfix/* /etc/postfix
+    /etc/init.d/cyrus-imapd restart
+    /etc/init.d/mysql restart
+    /etc/init.d/postfix restart
+    /etc/init.d/saslauthd restart
+    /etc/init.d/apache2 restart
 
-##### 7) To do some changes
     
 
 
@@ -176,6 +183,7 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
 
 
 
-##### At the end what maybe help you
+##### At the end what maybe help you (but if all is working, not do it)
 
     ln -s /var/run/mysqld/mysqld.sock /tmp/mysql.sock
+    echo "pwcheck_method: saslauthd" > /usr/lib/sasl2/smtpd.conf
