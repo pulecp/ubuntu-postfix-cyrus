@@ -1,20 +1,28 @@
 ubuntu-postfix-cyrus
 ====================
 
-#### How to install Postfix with Cyrus and SASL authentication on Ubuntu 12.04
+#### How to install Postfix with Cyrus and SASL authentication on Ubuntu 12.04 + Web-cyradm
 
+## Own DNS server 
 
-## To use this mail server configure your e-mail client as see below
+For own DNS server execute `bind.sh` script, where change following:
+
+    ip="x.x.x.x"            #ip address of your server
+    domain="example.com"    #domain of your server
+
+## Postfix + Cyrus + SASL
+
+**To use this mail server configure your e-mail client as see below**
 
 IMAP: port 143, connection security: none, authentication: name/password
 
 SMTP: port 465, connection security: STARTTLS, authentication: name/password
 
-## Install needed packages
+### Install needed packages
 
 ##### 1) apt-get -y install cyrus-admin cyrus-clients cyrus-imapd sasl2-bin postfix
 
-## Edit following configuration files
+### Edit following configuration files
 
 ##### 1) /etc/imapd.conf 
 
@@ -121,3 +129,53 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
     
     #you can make postfix more verbose by edit line in /etc/postfix/master.cf
     smtps     inet  n       -       -       -       -       smtpd -v -v
+    
+
+## Web-cyradm
+
+### Install needed packages (I suppose you clone this repository into /root directory)
+
+##### 1) apt-get -y install apache2 mysql-server mysql-client php5 libapache2-mod-php5 php5-mysql
+
+##### 2) place web-cyradm application into right directory and extract
+
+    mkdir -p /var/www
+    cp /root/ubuntu-postfix-cyrus/web-cyradm-svn-0.5.5.tar.gz /var/www
+    cd /var/www
+    tar -xvzf web-cyradm-svn-0.5.5.tar.gz
+    rm web-cyradm-svn-0.5.5.tar.gz
+
+##### 3) create VirtualHost in apache2
+
+    cp /root/ubuntu-postfix-cyrus/etc/apache2/sites-available/web-cyradm-svn-0.5.5 /etc/apache2/sites-available
+    cd /etc/apache2/sites-enabled
+    ln -s ../sites-available/web-cyradm-svn-0.5.5 web-cyradm-svn-0.5.5
+    
+##### 4) configure web-cyradm (when you use default settings, you needn't edit conf.php)
+
+    cd /var/www/web-cyradm-svn-0.5.5/config/
+    cp conf.php.dist conf.php
+    
+##### 5) configure mysql (edit passwords in sql script as needed)
+
+    cd /var/www/web-cyradm-svn-0.5.5/scripts/
+    sed -i 's/TYPE=MyISAM/ENGINE=MyISAM/;s/timestamp(14)/timestamp/' create_mysql.sql   #modification for newest mysql
+    mysql < insertuser_mysql.sql
+    mysql mail -u mail -p < create_mysql.sql        #password is 'secret'
+    
+##### 6) Copy some postfix configuration files
+
+    cp /root/ubuntu-postfix-cyrus/etc/postfix/* /etc/postfix
+
+##### 7) To do some changes
+    
+
+
+
+
+
+
+
+##### At the end what maybe help you
+
+    ln -s /var/run/mysqld/mysqld.sock /tmp/mysql.sock
