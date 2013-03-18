@@ -1,7 +1,7 @@
 ubuntu-postfix-cyrus
 ====================
 
-#### How to install Postfix with Cyrus and SASL authentication on Ubuntu 12.04 + Web-cyradm
+#### How to install Postfix with Cyrus and SASL authentication on Ubuntu 12.04 + Web-cyradm + MySQL
 
 ## Own DNS server 
 
@@ -10,7 +10,7 @@ For own DNS server execute `bind.sh` script, where change following:
     ip="x.x.x.x"            #ip address of your server
     domain="example.com"    #domain of your server
 
-## Postfix + Cyrus + SASL
+## Postfix + Cyrus + SASL + MySQL
 
 **To use this mail server configure your e-mail client as see below**
 
@@ -20,7 +20,7 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
 
 ### Install needed packages
 
-##### 1) apt-get -y install cyrus-admin cyrus-clients cyrus-imapd sasl2-bin postfix
+##### 1) apt-get -y install cyrus-admin cyrus-clients cyrus-imapd sasl2-bin postfix mysql-server mysql-client
 
 ### Edit following configuration files
 
@@ -139,7 +139,7 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
 
 ### Install needed packages (I suppose you clone this repository into /root directory)
 
-##### 1) apt-get -y install apache2 mysql-server mysql-client php5 libapache2-mod-php5 php5-mysql
+##### 1) apt-get -y install apache2 php5 libapache2-mod-php5 php5-mysql
 
 ##### 2) place web-cyradm application into right directory and extract
 
