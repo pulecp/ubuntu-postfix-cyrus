@@ -187,3 +187,5 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
 
     ln -s /var/run/mysqld/mysqld.sock /tmp/mysql.sock
     echo "pwcheck_method: saslauthd" > /usr/lib/sasl2/smtpd.conf
+
+Possible missing packages: php-db libpam-mysql
