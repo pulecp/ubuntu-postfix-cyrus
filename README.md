@@ -20,7 +20,7 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
 
 ### Install needed packages
 
-##### 1) apt-get -y install cyrus-admin cyrus-clients cyrus-imapd sasl2-bin postfix mysql-server mysql-client
+##### 1) apt-get -y install cyrus-admin cyrus-clients cyrus-imapd sasl2-bin postfix mysql-server mysql-client libpam-mysql
 
 ### Edit following configuration files
 
@@ -188,4 +188,4 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
     ln -s /var/run/mysqld/mysqld.sock /tmp/mysql.sock
     echo "pwcheck_method: saslauthd" > /usr/lib/sasl2/smtpd.conf
 
-Possible missing packages: php-db libpam-mysql
+Possible missing packages: php-db
