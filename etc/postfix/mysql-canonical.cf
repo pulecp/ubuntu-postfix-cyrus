@@ -1,0 +1,19 @@
+# mysql config file for canonical lookups on postfix
+# comments are ok.
+#
+
+# the user name and password to log into the mysql server
+hosts = localhost
+user = mail
+password = secret
+
+# the database name on the servers
+dbname = mail
+
+# the table name
+table = virtual
+#
+select_field = alias
+where_field = username
+# Return the first match only
+additional_conditions = and status = '1' limit 1
