@@ -31,7 +31,7 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
     allowplaintext: yes				          #edit line, not add!!!
     sasl_mech_list: PLAIN				      #edit line, not add!!!
     sasl_minimum_layer: 2				      #edit line, not add!!!
-    sasl_pwdcheck_method: saslauthd     	  #add new line
+    sasl_pwcheck_method: saslauthd      	  #add new line
 
 ##### 2) /etc/postfix/main.cf
 
