@@ -36,7 +36,7 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
 ##### 2) /etc/postfix/main.cf
 
     mydomain = example.com                                              #add new line
-    mydestination = $myhostname, $mydomain, mail.$mydomain, localhost   #edit line, not add!!!
+    mydestination = $myhostname, $mydomain, mail.$mydomain, localhost, mysql:/etc/postfix/mysql-mydestination.cf   #edit line, not add!!!
     mailbox_transport = cyrus                                           #add new line
     
     virtual_alias_maps = hash:/etc/postfix/virtual, mysql:/etc/postfix/mysql-virtual.cf #add new line
