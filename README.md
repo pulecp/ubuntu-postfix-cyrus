@@ -124,12 +124,12 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
     smtptest -u user -a user
     imtest -u user -a user
     
-    #check smtps
+    #check starttls
     telnet example.com 465
     ehlo example.com
     ...more google it
     
-    #other check smtps
+    #check tls/ssl
     openssl s_client -connect smtp.example.com:465 -state -debug
         
     #check imap
