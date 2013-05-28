@@ -40,6 +40,9 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
     tls_ca_file: /etc/ssl/cyrus/server.pem
     tls_ca_path: /etc/ssl/cyrus
 
+
+* generating server.pem: http://www.tldp.org/HOWTO/Postfix-Cyrus-Web-cyradm-HOWTO/cyrus-config.html or http://pastebin.com/raw.php?i=CU17QBuQ
+
 ##### 2) /etc/postfix/main.cf
 
     mydomain = example.com                                              #add new line
