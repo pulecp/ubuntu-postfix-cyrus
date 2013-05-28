@@ -29,9 +29,16 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
     admins: cyrus                             #edit line, nod add!!! (otherwise create mailbox “cm user.name” ends with permision denied)
     altnamespace: yes      		              #edit line, not add!!!
     allowplaintext: yes				          #edit line, not add!!!
-    sasl_mech_list: PLAIN				      #edit line, not add!!!
+    sasl_mech_list: pam 				      #edit line, not add!!!
     sasl_minimum_layer: 2				      #edit line, not add!!!
     sasl_pwcheck_method: saslauthd      	  #add new line
+    asl_saslauthd_path: /var/spool/postfix/var/run/saslauthd/mux    # for web-cyradm
+    
+    #for STARTTLS and TLS/SSL
+    tls_cert_file: /etc/ssl/cyrus/server.pem
+    tls_key_file: /etc/ssl/cyrus/server.pem
+    tls_ca_file: /etc/ssl/cyrus/server.pem
+    tls_ca_path: /etc/ssl/cyrus
 
 ##### 2) /etc/postfix/main.cf
 
