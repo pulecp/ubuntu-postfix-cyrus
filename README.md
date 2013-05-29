@@ -66,8 +66,10 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
 ##### 4) /etc/default/saslauthd
 
     START=yes
-    OPTIONS="-c -m /var/spool/postfix/var/run/saslauthd"    #edit line, not add!!!
+    OPTIONS="-c -m /var/spool/postfix/var/run/saslauthd -r"    #edit line, not add!!!
     PARAMS="-c -m /var/spool/postfix/var/run/saslauthd"     #I think it isn't needed more
+    
+-r due to use username+domain in SELECT query: http://pastebin.com/raw.php?i=Tx5KrxtN
 
 ##### 5) /etc/postfix/master.cf (uncomment following, edit "argv=" parameter with path to deliver!!!, and comment what you don't need)
 
