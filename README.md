@@ -84,13 +84,14 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
     pwcheck_method: saslauthd
     mech_list: PLAIN LOGIN
     
-##### 7) change saslauth location because postfix runs chrooted
+##### 7) change saslauth location because postfix runs chrooted and permission to mysql folder
 
     rm -r /var/run/saslauthd/
     mkdir -p /var/spool/postfix/var/run/saslauthd 
     ln -s /var/spool/postfix/var/run/saslauthd /var/run/saslauthd
     chgrp sasl /var/spool/postfix/var/run/saslauthd
     adduser postfix sasl                                    #adding postfix to sasl group
+    chmod -R 755 /var/lib/mysql/
     
     
 ##### 8) change cyrus admin password
