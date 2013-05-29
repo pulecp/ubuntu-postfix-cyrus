@@ -36,9 +36,11 @@ SMTP:
     admins: cyrus                             #edit line, nod add!!! (otherwise create mailbox “cm user.name” ends with permision denied)
     altnamespace: yes      		              #edit line, not add!!!
     allowplaintext: yes				          #edit line, not add!!!
-    sasl_mech_list: pam 				      #edit line, not add!!!
+    sasl_mech_list: PLAIN 				      #edit line, not add!!!
     sasl_minimum_layer: 2				      #edit line, not add!!!
     sasl_pwcheck_method: saslauthd      	  #add new line
+    sasl_password_format: crypt
+    
     sasl_saslauthd_path: /var/spool/postfix/var/run/saslauthd/mux    # for web-cyradm
     unixhierarchysep: no                        #disable dot "." use as at "@"
 
@@ -57,8 +59,8 @@ SMTP:
     mydomain = example.com                                              #add new line
     mydestination = $myhostname, $mydomain, mail.$mydomain, localhost, mysql:/etc/postfix/mysql-mydestination.cf   #edit line, not add!!!
     #mailbox_transport = cyrus                                           #no more using
-    virtual_transport = lmtp:unix:/var/run/cyrus/socket/lmtp
-    mailbox_transport = lmtp:unix:/var/run/cyrus/socket/lmtp
+    virtual_transport = lmtp:unix:/var/run/cyrus/socket/lmtp            #more: https://help.ubuntu.com/community/Cyrus
+    mailbox_transport = lmtp:unix:/var/run/cyrus/socket/lmtp            # and: http://pastebin.com/raw.php?i=tQguRQrw
     
     #virtual_alias_maps = hash:/etc/postfix/virtual, mysql:/etc/postfix/mysql-virtual.cf #now not using
     #sender_canonical_maps = mysql:/etc/postfix/mysql-canonical.cf                       #now not using
@@ -111,13 +113,12 @@ SMTP:
     ln -s /var/spool/postfix/var/run/saslauthd /var/run/saslauthd
     chgrp sasl /var/spool/postfix/var/run/saslauthd
     adduser postfix sasl                                    #adding postfix to sasl group
-    adduser postfix mail                                    #adding postfix to mail group
-    chmod -R 755 /var/lib/mysql/
+    adduser postfix mail                                    #adding postfix to mail group, more: https://help.ubuntu.com/community/Cyrus
+    chmod -R 755 /var/lib/mysql/                            #more: http://goo.gl/kaKzu and copy of this site: http://pastebin.com/raw.php?i=VvTF28Er
 
 ##### 7a) Pam authentization for mysql
 
     auth required pam_mysql.so verbose=0 user=mail passwd=your-password host=localhost db=mail table=accountuser usercolumn=username passwdcolumn=password crypt=1 logtable=log logmsgcolumn=msg logusercolumn=user loghostcolumn=host logpidcolumn=pid logtimecolumn=time
-
     account sufficient pam_mysql.so verbose=0 user=mail passwd=your-password host=localhost db=mail table=accountuser usercolumn=username passwdcolumn=password crypt=1 logtable=log logmsgcolumn=msg logusercolumn=user loghostcolumn=host logpidcolumn=pid logtimecolumn=time
     
 
