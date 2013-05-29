@@ -14,11 +14,15 @@ For own DNS server execute `bind.sh` script, where change following:
 
 **To use this mail server configure your e-mail client as see below**
 
-IMAP:   port 143, connection security: none, authentication: name/password
-        port 993, connection security: SSL/TLS, authentication: name/password
+IMAP:   
+    
+    port 143, connection security: none, authentication: name/password
+    port 993, connection security: SSL/TLS, authentication: name/password
 
-SMTP:   port 25, connection security: none, authentication: name/password
-        port 465, connection security: SSL/TLS, authentication: name/password
+SMTP:   
+    
+    port 25, connection security: none, authentication: name/password
+    port 465, connection security: SSL/TLS, authentication: name/password
         
         
 ### Install needed packages
