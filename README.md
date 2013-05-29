@@ -20,7 +20,7 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
 
 ### Install needed packages
 
-##### 1) apt-get -y install cyrus-admin cyrus-clients cyrus-imapd sasl2-bin postfix mysql-server mysql-client libpam-mysql
+##### 1) apt-get -y install cyrus-admin cyrus-clients cyrus-imapd sasl2-bin postfix mysql-server mysql-client libpam-mysql postfix-mysql
 
 ### Edit following configuration files
 
