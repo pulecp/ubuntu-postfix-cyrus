@@ -32,7 +32,9 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
     sasl_mech_list: pam 				      #edit line, not add!!!
     sasl_minimum_layer: 2				      #edit line, not add!!!
     sasl_pwcheck_method: saslauthd      	  #add new line
-    asl_saslauthd_path: /var/spool/postfix/var/run/saslauthd/mux    # for web-cyradm
+    sasl_saslauthd_path: /var/spool/postfix/var/run/saslauthd/mux    # for web-cyradm
+    unixhierarchysep: no                        #disable dot "." use as at "@"
+
     
     #for STARTTLS and TLS/SSL
     tls_cert_file: /etc/ssl/cyrus/server.pem
@@ -47,10 +49,12 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
 
     mydomain = example.com                                              #add new line
     mydestination = $myhostname, $mydomain, mail.$mydomain, localhost, mysql:/etc/postfix/mysql-mydestination.cf   #edit line, not add!!!
-    mailbox_transport = cyrus                                           #add new line
+    #mailbox_transport = cyrus                                           #no more using
+    virtual_transport = lmtp:unix:/var/run/cyrus/socket/lmtp
+    mailbox_transport = lmtp:unix:/var/run/cyrus/socket/lmtp
     
-    virtual_alias_maps = hash:/etc/postfix/virtual, mysql:/etc/postfix/mysql-virtual.cf #add new line
-    sender_canonical_maps = mysql:/etc/postfix/mysql-canonical.cf                       #add new line
+    #virtual_alias_maps = hash:/etc/postfix/virtual, mysql:/etc/postfix/mysql-virtual.cf #now not using
+    #sender_canonical_maps = mysql:/etc/postfix/mysql-canonical.cf                       #now not using
     broken_sasl_auth_clients = yes                                      #add new line
     cyrus_sasl_config_path = /etc/postfix/sasl                          #add new line
     smtpd_sasl_security_options = noanonymous                           #add new line
@@ -58,6 +62,9 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
         permit_mynetworks,                                              
         permit_sasl_authenticated,
         reject_unauth_destination
+        
+    local_recipient_maps =              #to disable this report: Recipient address rejected: User unknown in local recipient table
+
     
 ##### 3) copy some postfix configuration files (I suppose you clone this repository into /root directory)
 
@@ -73,10 +80,16 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
 
 ##### 5) /etc/postfix/master.cf (uncomment following, edit "argv=" parameter with path to deliver!!!, and comment what you don't need)
 
-    cyrus unix - n n - - pipe
-    flags=R user=cyrus argv=/usr/sbin/cyrdeliver -e -m "${extension}" ${user}
+    #cyrus unix - n n - - pipe                                                       #now not using
+    #flags=R user=cyrus argv=/usr/sbin/cyrdeliver -e -m "${extension}" ${user}
     
-    smtps     inet  n       -       -       -       -       smtpd
+    smtps     inet  n       -       -       -       -       smtpd                   #uncomment
+        -o smtpd_tls_wrappermode=yes
+        -o smtpd_sasl_auth_enable=yes
+        -o smtpd_client_restrictions=permit_sasl_authenticated,reject
+    
+    lmtp      unix  -       -       n       -       -       lmtp                    #start unchrooted
+
     
     
 ##### 6) /etc/postfix/sasl/smtpd.conf (create new file)
@@ -93,7 +106,14 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
     adduser postfix sasl                                    #adding postfix to sasl group
     adduser postfix mail                                    #adding postfix to mail group
     chmod -R 755 /var/lib/mysql/
+
+##### 7a) Pam authentization for mysql
+
+    auth required pam_mysql.so verbose=0 user=mail passwd=your-password host=localhost db=mail table=accountuser usercolumn=username passwdcolumn=password crypt=1 logtable=log logmsgcolumn=msg logusercolumn=user loghostcolumn=host logpidcolumn=pid logtimecolumn=time
+
+    account sufficient pam_mysql.so verbose=0 user=mail passwd=your-password host=localhost db=mail table=accountuser usercolumn=username passwdcolumn=password crypt=1 logtable=log logmsgcolumn=msg logusercolumn=user loghostcolumn=host logpidcolumn=pid logtimecolumn=time
     
+
     
 ##### 8) change cyrus admin password
 
