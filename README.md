@@ -14,10 +14,13 @@ For own DNS server execute `bind.sh` script, where change following:
 
 **To use this mail server configure your e-mail client as see below**
 
-IMAP: port 143, connection security: none, authentication: name/password
+IMAP:   port 143, connection security: none, authentication: name/password
+        port 993, connection security: SSL/TLS, authentication: name/password
 
-SMTP: port 465, connection security: STARTTLS, authentication: name/password
-
+SMTP:   port 25, connection security: none, authentication: name/password
+        port 465, connection security: SSL/TLS, authentication: name/password
+        
+        
 ### Install needed packages
 
 ##### 1) apt-get -y install cyrus-admin cyrus-clients cyrus-imapd sasl2-bin postfix mysql-server mysql-client libpam-mysql postfix-mysql
