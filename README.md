@@ -91,6 +91,7 @@ SMTP: port 465, connection security: STARTTLS, authentication: name/password
     ln -s /var/spool/postfix/var/run/saslauthd /var/run/saslauthd
     chgrp sasl /var/spool/postfix/var/run/saslauthd
     adduser postfix sasl                                    #adding postfix to sasl group
+    adduser postfix mail                                    #adding postfix to mail group
     chmod -R 755 /var/lib/mysql/
     
     
