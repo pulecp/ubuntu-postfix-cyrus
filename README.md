@@ -106,6 +106,13 @@ SMTP:
     pwcheck_method: saslauthd
     mech_list: PLAIN LOGIN
     
+##### 6a) /etc/pam.d/imap and /etc/pam.d/smtp (you can add verbose=1 for debug)
+
+    auth required pam_mysql.so user=mail passwd=secret host=localhost db=mail table=accountuser usercolumn=username passwdcolumn=password crypt=1 logtable=log logmsgcolumn=msg logusercolumn=user loghostcolumn=host logpidcolumn=pid logtimecolumn=time
+        
+    account sufficient pam_mysql.so user=mail passwd=secret host=localhost db=mail table=accountuser usercolumn=username passwdcolumn=password crypt=1 logtable=log logmsgcolumn=msg logusercolumn=user loghostcolumn=host logpidcolumn=pid logtimecolumn=time
+
+    
 ##### 7) change saslauth location because postfix runs chrooted and permission to mysql folder
 
     rm -r /var/run/saslauthd/
