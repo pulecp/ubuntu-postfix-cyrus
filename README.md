@@ -92,6 +92,8 @@ SMTP:
     cyrus unix - n n - - pipe                                                       #change
     flags=R user=cyrus argv=/usr/sbin/cyrdeliver -e -m "${extension}" ${user}
     
+    smtp      inet  n       -       -       -       -       smtpd                   #port 25
+    587       inet  n       -       -       -       -       smtpd -o smtpd_tls_wrappermode=yes -o smtpd_sasl_auth_enable=yes -o smtpd_client_restrictions=permit_sasl_authenticated,reject                  #port 587 for STARTTLS
     smtps     inet  n       -       -       -       -       smtpd                   #uncomment
         -o smtpd_tls_wrappermode=yes
         -o smtpd_sasl_auth_enable=yes
