@@ -123,13 +123,7 @@ SMTP:
     adduser postfix mail                                    #adding postfix to mail group, more: https://help.ubuntu.com/community/Cyrus
     chmod -R 755 /var/lib/mysql/                            #more: http://goo.gl/kaKzu and copy of this site: http://pastebin.com/raw.php?i=VvTF28Er
 
-##### 7a) Pam authentization for mysql
 
-    auth required pam_mysql.so verbose=0 user=mail passwd=your-password host=localhost db=mail table=accountuser usercolumn=username passwdcolumn=password crypt=1 logtable=log logmsgcolumn=msg logusercolumn=user loghostcolumn=host logpidcolumn=pid logtimecolumn=time
-    account sufficient pam_mysql.so verbose=0 user=mail passwd=your-password host=localhost db=mail table=accountuser usercolumn=username passwdcolumn=password crypt=1 logtable=log logmsgcolumn=msg logusercolumn=user loghostcolumn=host logpidcolumn=pid logtimecolumn=time
-    
-
-    
 ##### 8) change cyrus admin password
 
     saslpasswd2 -c cyrus
