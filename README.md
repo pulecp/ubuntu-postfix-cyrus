@@ -220,7 +220,11 @@ SMTP:
     
 
 
+## BUGS
 
+After reboot is needed to make symlink:
+
+    ln -s /var/spool/postfix/var/run/saslauthd /var/run/saslauthd
 
 
 
