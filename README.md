@@ -89,8 +89,8 @@ SMTP:
 
 ##### 5) /etc/postfix/master.cf (uncomment following, edit "argv=" parameter with path to deliver!!!, and comment what you don't need)
 
-    #cyrus unix - n n - - pipe                                                       #now not using
-    #flags=R user=cyrus argv=/usr/sbin/cyrdeliver -e -m "${extension}" ${user}
+    cyrus unix - n n - - pipe                                                       #change
+    flags=R user=cyrus argv=/usr/sbin/cyrdeliver -e -m "${extension}" ${user}
     
     smtps     inet  n       -       -       -       -       smtpd                   #uncomment
         -o smtpd_tls_wrappermode=yes
