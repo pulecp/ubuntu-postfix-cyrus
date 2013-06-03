@@ -16,13 +16,14 @@ For own DNS server execute `bind.sh` script, where change following:
 
 IMAP:   
     
-    port 143, connection security: none, authentication: name/password
+    port 143, connection security: none/STARTTLS, authentication: name/password
     port 993, connection security: SSL/TLS, authentication: name/password
 
 SMTP:   
     
     port 25, connection security: none, authentication: name/password
     port 465, connection security: SSL/TLS, authentication: name/password
+    port 587, connection security: STARTTLS, authentication: name/password
         
         
 ### Install needed packages
