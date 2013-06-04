@@ -41,6 +41,8 @@ SMTP:
     sasl_minimum_layer: 2				      #edit line, not add!!!
     sasl_pwcheck_method: saslauthd      	  #add new line
     sasl_password_format: crypt
+    #virtdomains: yes                         #to disable adding @domain to authentication
+                 
     
     sasl_saslauthd_path: /var/spool/postfix/var/run/saslauthd/mux    # for web-cyradm
     unixhierarchysep: no                        #disable dot "." use as at "@"
