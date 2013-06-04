@@ -44,8 +44,8 @@ SMTP:
     #virtdomains: yes                         #to disable adding @domain to authentication
                  
     
-    sasl_saslauthd_path: /var/spool/postfix/var/run/saslauthd/mux    # for web-cyradm
-    unixhierarchysep: no                        #disable dot "." use as at "@"
+    #sasl_saslauthd_path: /var/spool/postfix/var/run/saslauthd/mux    # for web-cyradm
+    unixhierarchysep: yes                           #instead '.' use / in mailboxname
 
     
     #for STARTTLS and TLS/SSL
@@ -53,20 +53,29 @@ SMTP:
     tls_key_file: /etc/ssl/cyrus/server.pem
     tls_ca_file: /etc/ssl/cyrus/server.pem
     tls_ca_path: /etc/ssl/cyrus
-
+    
+    #some others
+    syslog_prefix: cyrus
+    lmtpsocket: /var/run/cyrus/socket/lmtp
+    idlesocket: /var/run/cyrus/socket/idle
+    notifysocket: /var/run/cyrus/socket/notify
+    
 
 * generating server.pem: http://www.tldp.org/HOWTO/Postfix-Cyrus-Web-cyradm-HOWTO/cyrus-config.html or http://pastebin.com/raw.php?i=CU17QBuQ
 
 ##### 2) /etc/postfix/main.cf
 
     mydomain = example.com                                              #add new line
-    mydestination = $myhostname, $mydomain, mail.$mydomain, localhost, mysql:/etc/postfix/mysql-mydestination.cf   #edit line, not add!!!
+    mydestination = $myhostname, proxy:mysql:/etc/postfix/mysql-mydestination.cf   #edit line, not add!!!
     #mailbox_transport = cyrus                                           #no more using
     virtual_transport = lmtp:unix:/var/run/cyrus/socket/lmtp            #more: https://help.ubuntu.com/community/Cyrus
-    mailbox_transport = lmtp:unix:/var/run/cyrus/socket/lmtp            # and: http://pastebin.com/raw.php?i=tQguRQrw
+    #mailbox_transport = lmtp:unix:/var/run/cyrus/socket/lmtp            # and: http://pastebin.com/raw.php?i=tQguRQrw
+    mailbox_transport = cyrus
     
     #virtual_alias_maps = hash:/etc/postfix/virtual, mysql:/etc/postfix/mysql-virtual.cf #now not using
     #sender_canonical_maps = mysql:/etc/postfix/mysql-canonical.cf                       #now not using
+    smtpd_sasl_auth_enable = yes
+    smtpd_sasl_type = cyrus
     broken_sasl_auth_clients = yes                                      #add new line
     cyrus_sasl_config_path = /etc/postfix/sasl                          #add new line
     smtpd_sasl_security_options = noanonymous                           #add new line
@@ -76,6 +85,12 @@ SMTP:
         reject_unauth_destination
         
     local_recipient_maps =              #to disable this report: Recipient address rejected: User unknown in local recipient table
+    
+    virtual_alias_maps = proxy:mysql:/etc/postfix/mysql-virtual.cf
+    sender_canonical_maps = proxy:mysql:/etc/postfix/mysql-canonical.cf
+    local_recipient_maps = proxy:mysql:/etc/postfix/mysql-localrecipient.cf
+
+    masquerade_domains =
 
     
 ##### 3) copy some postfix configuration files (I suppose you clone this repository into /root directory)
@@ -86,7 +101,7 @@ SMTP:
 
     START=yes
     OPTIONS="-c -m /var/spool/postfix/var/run/saslauthd -r"    #edit line, not add!!!
-    PARAMS="-c -m /var/spool/postfix/var/run/saslauthd"     #I think it isn't needed more
+    #PARAMS="-c -m /var/spool/postfix/var/run/saslauthd"     #I think it isn't needed more
     
 -r due to use username+domain in SELECT query: http://pastebin.com/raw.php?i=Tx5KrxtN
 
@@ -113,10 +128,12 @@ SMTP:
     
 ##### 6a) /etc/pam.d/imap, /etc/pam.d/pop3, /etc/pam.d/pop and /etc/pam.d/smtp (you can add verbose=1 for debug)
 
-    auth required pam_mysql.so user=mail passwd=secret host=localhost db=mail table=accountuser usercolumn=username passwdcolumn=password crypt=1 logtable=log logmsgcolumn=msg logusercolumn=user loghostcolumn=host logpidcolumn=pid logtimecolumn=time
+    auth required pam_mysql.so user=mail passwd=secret host=localhost db=mail table=accountuser usercolumn=username passwdcolumn=password crypt=1
         
-    account sufficient pam_mysql.so user=mail passwd=secret host=localhost db=mail table=accountuser usercolumn=username passwdcolumn=password crypt=1 logtable=log logmsgcolumn=msg logusercolumn=user loghostcolumn=host logpidcolumn=pid logtimecolumn=time
+    account sufficient pam_mysql.so user=mail passwd=secret host=localhost db=mail table=accountuser usercolumn=username passwdcolumn=password crypt=1
 
+    #it's possible add loging detail at end of rows above
+    #logtable=log logmsgcolumn=msg logusercolumn=user loghostcolumn=host logpidcolumn=pid logtimecolumn=time
     
 ##### 7) change saslauth location because postfix runs chrooted and permission to mysql folder
 
@@ -129,7 +146,7 @@ SMTP:
     chmod -R 755 /var/lib/mysql/                            #more: http://goo.gl/kaKzu and copy of this site: http://pastebin.com/raw.php?i=VvTF28Er
 
 
-##### 8) change cyrus admin password
+##### 8) change cyrus admin password (same in web-cyradm config)
 
     saslpasswd2 -c cyrus
     passwd cyrus
