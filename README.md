@@ -174,6 +174,9 @@ SMTP:
     telnet smtp.example.com 143
     whatever login username password
     
+    #problem with mailbox (manually deleted folder/files...), returning System I/O error
+    /usr/lib/cyrus/bin/reconstruct -r -f user                   #finded here http://www.banquise.org/software/how-to-recover-from-cyrus-when-you-have-some-db-errors/
+    
     
     #you can add this line to /etc/postfix/main.cf
     debug_peer_list = example.com
