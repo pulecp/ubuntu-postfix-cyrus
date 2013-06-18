@@ -36,17 +36,14 @@ SMTP:
 
     admins: cyrus                             #edit line, nod add!!! (otherwise create mailbox “cm user.name” ends with permision denied)
     altnamespace: yes      		              #edit line, not add!!!
+    unixhierarchysep: yes                     #edit line, not add (instead '.' use / in mailboxname)
     allowplaintext: yes				          #edit line, not add!!!
     sasl_mech_list: PLAIN 				      #edit line, not add!!!
     sasl_minimum_layer: 2				      #edit line, not add!!!
     sasl_pwcheck_method: saslauthd      	  #add new line
-    sasl_password_format: crypt
+    sasl_password_format: crypt               #add new line
     #virtdomains: yes                         #to disable adding @domain to authentication
                  
-    
-    #sasl_saslauthd_path: /var/spool/postfix/var/run/saslauthd/mux    # for web-cyradm
-    unixhierarchysep: yes                           #instead '.' use / in mailboxname
-
     
     #for STARTTLS and TLS/SSL
     tls_cert_file: /etc/ssl/cyrus/server.pem
@@ -54,11 +51,7 @@ SMTP:
     tls_ca_file: /etc/ssl/cyrus/server.pem
     tls_ca_path: /etc/ssl/cyrus
     
-    #some others
-    syslog_prefix: cyrus
-    lmtpsocket: /var/run/cyrus/socket/lmtp
-    idlesocket: /var/run/cyrus/socket/idle
-    notifysocket: /var/run/cyrus/socket/notify
+    #sasl_saslauthd_path: /var/spool/postfix/var/run/saslauthd/mux    # for web-cyradm
     
 
 * generating server.pem: http://www.tldp.org/HOWTO/Postfix-Cyrus-Web-cyradm-HOWTO/cyrus-config.html or http://pastebin.com/raw.php?i=CU17QBuQ
