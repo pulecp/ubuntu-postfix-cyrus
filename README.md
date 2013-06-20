@@ -28,7 +28,7 @@ SMTP:
         
 ### Install needed packages
 
-##### 1) apt-get -y install cyrus-admin cyrus-clients cyrus-imapd sasl2-bin postfix mysql-server mysql-client libpam-mysql postfix-mysql
+##### 1) apt-get -y install cyrus-admin cyrus-clients cyrus-imapd cyrus-pop3d sasl2-bin postfix mysql-server mysql-client libpam-mysql postfix-mysql
 
 ### Edit following configuration files
 
