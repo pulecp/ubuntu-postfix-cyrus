@@ -84,6 +84,7 @@ SMTP:
     local_recipient_maps = proxy:mysql:/etc/postfix/mysql-localrecipient.cf
 
     masquerade_domains =
+    header_checks = regexp:/etc/postfix/header_checks
 
     
 ##### 3) copy some postfix configuration files (I suppose you clone this repository into /root directory)
