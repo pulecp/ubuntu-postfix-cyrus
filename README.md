@@ -35,6 +35,7 @@ SMTP:
 ##### 1) /etc/imapd.conf 
 
     admins: cyrus                             #edit line, nod add!!! (otherwise create mailbox “cm user.name” ends with permision denied)
+    sieve_admins: cyrus                       #edit line, nod add!!!
     altnamespace: yes      		              #edit line, not add!!!
     unixhierarchysep: yes                     #edit line, not add (instead '.' use / in mailboxname)
     allowplaintext: yes				          #edit line, not add!!!
