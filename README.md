@@ -118,7 +118,7 @@ SMTP:
     pwcheck_method: saslauthd
     mech_list: PLAIN LOGIN
     
-##### 6a) /etc/pam.d/imap, /etc/pam.d/pop3, /etc/pam.d/pop and /etc/pam.d/smtp (you can add verbose=1 for debug)
+##### 6a) /etc/pam.d/imap, /etc/pam.d/pop3, /etc/pam.d/pop, /etc/pam.d/sieve and /etc/pam.d/smtp (you can add verbose=1 for debug)
 
     auth required pam_mysql.so user=mail passwd=secret host=localhost db=mail table=accountuser usercolumn=username passwdcolumn=password crypt=1
         
