@@ -28,37 +28,30 @@ SMTP:
         
 ### Install needed packages
 
-##### 1) apt-get -y install cyrus-admin cyrus-clients cyrus-imapd sasl2-bin postfix mysql-server mysql-client libpam-mysql postfix-mysql
+##### 1) apt-get -y install cyrus-admin cyrus-clients cyrus-imapd cyrus-pop3d cyrus-nntpd sasl2-bin postfix mysql-server mysql-client libpam-mysql postfix-mysql
 
 ### Edit following configuration files
 
 ##### 1) /etc/imapd.conf 
 
     admins: cyrus                             #edit line, nod add!!! (otherwise create mailbox “cm user.name” ends with permision denied)
+    sieve_admins: cyrus                       #edit line, nod add!!!
     altnamespace: yes      		              #edit line, not add!!!
+    unixhierarchysep: yes                     #edit line, not add (instead '.' use / in mailboxname)
     allowplaintext: yes				          #edit line, not add!!!
     sasl_mech_list: PLAIN 				      #edit line, not add!!!
     sasl_minimum_layer: 2				      #edit line, not add!!!
     sasl_pwcheck_method: saslauthd      	  #add new line
-    sasl_password_format: crypt
+    sasl_password_format: crypt               #add new line
     #virtdomains: yes                         #to disable adding @domain to authentication
                  
-    
-    #sasl_saslauthd_path: /var/spool/postfix/var/run/saslauthd/mux    # for web-cyradm
-    unixhierarchysep: yes                           #instead '.' use / in mailboxname
-
     
     #for STARTTLS and TLS/SSL
     tls_cert_file: /etc/ssl/cyrus/server.pem
     tls_key_file: /etc/ssl/cyrus/server.pem
     tls_ca_file: /etc/ssl/cyrus/server.pem
-    tls_ca_path: /etc/ssl/cyrus
     
-    #some others
-    syslog_prefix: cyrus
-    lmtpsocket: /var/run/cyrus/socket/lmtp
-    idlesocket: /var/run/cyrus/socket/idle
-    notifysocket: /var/run/cyrus/socket/notify
+    #sasl_saslauthd_path: /var/spool/postfix/var/run/saslauthd/mux    # for web-cyradm
     
 
 * generating server.pem: http://www.tldp.org/HOWTO/Postfix-Cyrus-Web-cyradm-HOWTO/cyrus-config.html or http://pastebin.com/raw.php?i=CU17QBuQ
@@ -91,6 +84,7 @@ SMTP:
     local_recipient_maps = proxy:mysql:/etc/postfix/mysql-localrecipient.cf
 
     masquerade_domains =
+    header_checks = regexp:/etc/postfix/header_checks
 
     
 ##### 3) copy some postfix configuration files (I suppose you clone this repository into /root directory)
@@ -126,7 +120,7 @@ SMTP:
     pwcheck_method: saslauthd
     mech_list: PLAIN LOGIN
     
-##### 6a) /etc/pam.d/imap, /etc/pam.d/pop3, /etc/pam.d/pop and /etc/pam.d/smtp (you can add verbose=1 for debug)
+##### 6a) /etc/pam.d/imap, /etc/pam.d/pop3, /etc/pam.d/pop, /etc/pam.d/sieve and /etc/pam.d/smtp (you can add verbose=1 for debug)
 
     auth required pam_mysql.so user=mail passwd=secret host=localhost db=mail table=accountuser usercolumn=username passwdcolumn=password crypt=1
         
