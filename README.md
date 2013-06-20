@@ -49,7 +49,6 @@ SMTP:
     tls_cert_file: /etc/ssl/cyrus/server.pem
     tls_key_file: /etc/ssl/cyrus/server.pem
     tls_ca_file: /etc/ssl/cyrus/server.pem
-    tls_ca_path: /etc/ssl/cyrus
     
     #sasl_saslauthd_path: /var/spool/postfix/var/run/saslauthd/mux    # for web-cyradm
     
