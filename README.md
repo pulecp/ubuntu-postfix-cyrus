@@ -36,7 +36,7 @@ SMTP:
 
     admins: cyrus                             #edit line, nod add!!! (otherwise create mailbox “cm user.name” ends with permision denied)
     sieve_admins: cyrus                       #edit line, nod add!!!
-    altnamespace: yes      		              #edit line, not add!!!
+    altnamespace: no      		              #edit line, not add!!! (all folders are subfolders in Inbox, but list of mailbox (i.o. Sent) 'lm' in cyradm is faceing as /user/name/Sent...)
     unixhierarchysep: yes                     #edit line, not add (instead '.' use / in mailboxname)
     allowplaintext: yes				          #edit line, not add!!!
     sasl_mech_list: PLAIN 				      #edit line, not add!!!
