@@ -280,11 +280,7 @@ SMTP:
 
 ## BUGS
 
-After reboot is needed to make symlink:
-
-    ln -s /var/spool/postfix/var/run/saslauthd /var/run/saslauthd
-
-After add new user, you have to add his mailbox manually by:
+After add new user, you have to add his mailbox manually by (or I think is sufficient to send e-mail to this mailbox):
 
     cyradm -u cyrus localhost
     cm user.your_mail_name@your_domain.com
