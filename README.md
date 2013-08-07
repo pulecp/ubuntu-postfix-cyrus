@@ -56,7 +56,7 @@ SMTP:
 
 * generating server.pem: http://www.tldp.org/HOWTO/Postfix-Cyrus-Web-cyradm-HOWTO/cyrus-config.html or http://pastebin.com/raw.php?i=CU17QBuQ
 
-##### 2) /etc/postfix/main.cf
+##### 2) /etc/postfix/main.cf (after install main.cf missing, so do "cp /usr/share/postfix/main.cf.debian /etc/postfix/main.cf")
 
     mydomain = example.com                                              #add new line
     mydestination = $myhostname, proxy:mysql:/etc/postfix/mysql-mydestination.cf   #edit line, not add!!!
