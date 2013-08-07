@@ -169,6 +169,20 @@ SMTP:
     saslpasswd2 -c cyrus
     passwd cyrus
     
+##### 8a) hack saslauthd to create symlink on every start, edit function do_startall in /etc/init.d/saslauthd
+
+    do_startall()
+    {
+            for instance in $DEFAULT_FILES
+            do
+                    start_instance $instance
+            done
+            #added by kayn to fix missing symlink after reboot
+            ln -s /var/spool/postfix/var/run/saslauthd /var/run/saslauthd > /dev/null 2>&1
+    }
+
+    
+    
 ##### 9) restart services
 
     /etc/init.d/cyrus-imapd restart
