@@ -124,8 +124,8 @@ SMTP:
 
 ##### 5) /etc/postfix/master.cf (uncomment following, edit "argv=" parameter with path to deliver!!!, and comment what you don't need)
 
-    cyrus unix - n n - - pipe                                                       #change
-    flags=R user=cyrus argv=/usr/sbin/cyrdeliver -e -m "${extension}" ${user}
+    cyrus     unix  -       n       n       -       -       pipe                # change it!
+  user=cyrus argv=/usr/sbin/cyrdeliver -e -r ${sender} -m ${extension} ${user}
     
     smtp      inet  n       -       -       -       -       smtpd                   #port 25
     587       inet  n       -       -       -       -       smtpd                   #port 587 for STARTTLS
