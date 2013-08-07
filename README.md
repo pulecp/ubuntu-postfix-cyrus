@@ -130,6 +130,7 @@ SMTP:
     smtp      inet  n       -       -       -       -       smtpd                   #port 25
     587       inet  n       -       -       -       -       smtpd                   #port 587 for STARTTLS
     smtps     inet  n       -       -       -       -       smtpd                   #uncomment
+        -o syslog_name=postfix/smtps
         -o smtpd_tls_wrappermode=yes
         -o smtpd_sasl_auth_enable=yes
         -o smtpd_client_restrictions=permit_sasl_authenticated,reject
