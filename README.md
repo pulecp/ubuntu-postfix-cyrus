@@ -58,8 +58,31 @@ SMTP:
 
 ##### 2) /etc/postfix/main.cf (after install main.cf missing, so do "cp /usr/share/postfix/main.cf.debian /etc/postfix/main.cf")
 
+    
+    # TLS parameters
+    smtpd_tls_cert_file=/etc/ssl/certs/ssl-cert-snakeoil.pem
+    smtpd_tls_key_file=/etc/ssl/private/ssl-cert-snakeoil.key
+    smtpd_use_tls=yes
+    smtpd_tls_session_cache_database = btree:${data_directory}/smtpd_scache
+    smtp_tls_session_cache_database = btree:${data_directory}/smtp_scache
+    
+    # See /usr/share/doc/postfix/TLS_README.gz in the postfix-doc package for
+    # information on enabling SSL in the smtp client.
+    
+    myhostname = name-of-server.example.com
+    alias_maps = hash:/etc/aliases
+    alias_database = hash:/etc/aliases
+    myorigin = /etc/mailname
+    mydestination = name-of-server.example.com, localhost.example.com, , localhost, proxy:mysql:/etc/postfix/mysql-mydestination.cf
+    relayhost =
+    mynetworks = 127.0.0.0/8 [::ffff:127.0.0.0]/104 [::1]/128
+    mailbox_size_limit = 0
+    recipient_delimiter = +
+    inet_interfaces = all
+
+
+    
     mydomain = example.com                                              #add new line
-    mydestination = $myhostname, proxy:mysql:/etc/postfix/mysql-mydestination.cf   #edit line, not add!!!
     #mailbox_transport = cyrus                                           #no more using
     virtual_transport = lmtp:unix:/var/run/cyrus/socket/lmtp            #more: https://help.ubuntu.com/community/Cyrus
     #mailbox_transport = lmtp:unix:/var/run/cyrus/socket/lmtp            # and: http://pastebin.com/raw.php?i=tQguRQrw
