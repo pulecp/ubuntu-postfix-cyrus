@@ -162,6 +162,7 @@ SMTP:
     adduser postfix sasl                                    #adding postfix to sasl group
     adduser postfix mail                                    #adding postfix to mail group, more: https://help.ubuntu.com/community/Cyrus
     chmod -R 755 /var/lib/mysql/                            #more: http://goo.gl/kaKzu and copy of this site: http://pastebin.com/raw.php?i=VvTF28Er
+    newaliases                                              #creates /etc/aliases.db (it's necessary even if is not using)
 
 
 ##### 8) change cyrus admin password (same in web-cyradm config)
