@@ -117,7 +117,8 @@ SMTP:
 ##### 4) /etc/default/saslauthd
 
     START=yes
-    OPTIONS="-c -m /var/spool/postfix/var/run/saslauthd -r"    #edit line, not add!!!
+    THREADS=10
+    OPTIONS="-c -m /var/spool/postfix/var/run/saslauthd -r -t 3600"    #edit line, not add!!!
     #PARAMS="-c -m /var/spool/postfix/var/run/saslauthd"     #I think it isn't needed more
     
 -r due to use username+domain in SELECT query: http://pastebin.com/raw.php?i=Tx5KrxtN
