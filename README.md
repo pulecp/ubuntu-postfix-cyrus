@@ -227,6 +227,8 @@ SMTP:
     
     #problem with mailbox (manually deleted folder/files...), returning System I/O error
     /usr/lib/cyrus/bin/reconstruct -r -f user                   #finded here http://www.banquise.org/software/how-to-recover-from-cyrus-when-you-have-some-db-errors/
+    /usr/lib/cyrus/bin/reconstruct -r -f %                      #reconstruct all mailboxes (run quota after)!!
+    /usr/lib/cyrus/bin/quota -f                                 #run after reconstruct all mailboxes
     
     
     #you can add this line to /etc/postfix/main.cf
