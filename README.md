@@ -40,7 +40,7 @@ SMTP:
     unixhierarchysep: yes                     #edit line, not add (instead '.' use / in mailboxname)
     allowplaintext: yes				          #edit line, not add!!!
     sasl_mech_list: PLAIN 				      #edit line, not add!!!
-    sasl_minimum_layer: 2				      #edit line, not add!!!
+    sasl_minimum_layer: 2				      #edit line, not add!!!, use 0 for web-cyradm
     sasl_pwcheck_method: saslauthd      	  #add new line
     sasl_password_format: crypt               #add new line
     #virtdomains: yes                         #to disable adding @domain to authentication
