@@ -147,6 +147,31 @@ SMTP:
     mech_list: PLAIN LOGIN
     authdaemond_path: /var/run/courier/authdaemon/socket
     
+##### 6aa) /etc/courier/authdaemonrc
+
+authmodulelist="authmysql authpam"
+daemons=5
+authdaemonvar=/var/run/courier/authdaemon
+DEBUG_LOGIN=2
+DEFAULTOPTIONS=""
+LOGGEROPTS=""
+
+##### 6ab) /etc/courier/authmysqlrc
+
+MYSQL_SERVER            localhost
+MYSQL_USERNAME          some_name
+MYSQL_PASSWORD          some_password
+MYSQL_PORT              0
+MYSQL_OPT               0
+MYSQL_DATABASE          sys
+MYSQL_USER_TABLE        accountuser
+MYSQL_CRYPT_PWFIELD     password
+MYSQL_LOGIN_FIELD       username
+MYSQL_UID_FIELD         5000
+MYSQL_GID_FIELD         5000
+MYSQL_HOME_FIELD        10
+
+    
 ##### 6a) [NO MORE NEEDED] /etc/pam.d/imap, /etc/pam.d/pop3, /etc/pam.d/pop, /etc/pam.d/sieve and /etc/pam.d/smtp (you can add verbose=1 for debug)
 
     auth required pam_mysql.so user=mail passwd=secret host=localhost db=mail table=accountuser usercolumn=username passwdcolumn=password crypt=1
