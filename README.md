@@ -171,9 +171,9 @@ SMTP:
     MYSQL_GID_FIELD         5000
     MYSQL_HOME_FIELD        10
     
-##### 6ac) add /etc/fstab (mount --bind /var/run /var/spool/postfix/var/run)
+##### 6ac) add /etc/fstab (mount --bind /run /var/spool/postfix/var/run)
 
-    /var/run /var/spool/postfix/var/run none bind 0 0
+    /run /var/spool/postfix/var/run none bind 0 0
     
 ##### 6ad) edit /etc/init.d/courier-authdaemon (add eXecute perm to /var/run/courier/authdaemon by changing perm to folder)
 
