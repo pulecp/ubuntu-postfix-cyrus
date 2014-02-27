@@ -1,7 +1,7 @@
 ubuntu-postfix-cyrus
 ====================
 
-#### How to install Postfix with Cyrus and SASL authentication on Ubuntu 12.04 + Web-cyradm + MySQL
+#### How to install Postfix with Cyrus and authdaemon on Ubuntu 12.04 + Web-cyradm + MySQL
 
 ## Own DNS server 
 
@@ -10,7 +10,7 @@ For own DNS server execute `bind.sh` script, where change following:
     ip="x.x.x.x"            #ip address of your server
     domain="example.com"    #domain of your server
 
-## Postfix + Cyrus + SASL + MySQL
+## Postfix + Cyrus + authdaemon + MySQL
 
 **To use this mail server configure your e-mail client as see below**
 
@@ -28,20 +28,22 @@ SMTP:
         
 ### Install needed packages
 
-##### 1) apt-get -y install cyrus-admin cyrus-clients cyrus-imapd cyrus-pop3d cyrus-nntpd sasl2-bin postfix mysql-server mysql-client libpam-mysql postfix-mysql
+##### 1) apt-get -y install cyrus-admin cyrus-clients cyrus-imapd cyrus-pop3d cyrus-nntpd sasl2-bin postfix mysql-server mysql-client libpam-mysql postfix-mysql courier-authlib courier-authdaemon courier-authlib-mysql
 
 ### Edit following configuration files
 
-##### 1) /etc/imapd.conf 
+##### 1) /etc/imapd.conf
 
     admins: cyrus                             #edit line, nod add!!! (otherwise create mailbox “cm user.name” ends with permision denied)
     sieve_admins: cyrus                       #edit line, nod add!!!
     altnamespace: no      		              #edit line, not add!!! (all folders are subfolders in Inbox, but list of mailbox (i.o. Sent) 'lm' in cyradm is faceing as /user/name/Sent...)
     unixhierarchysep: yes                     #edit line, not add (instead '.' use / in mailboxname)
     allowplaintext: yes				          #edit line, not add!!!
-    sasl_mech_list: PLAIN 				      #edit line, not add!!!
+    sasl_mech_list: PLAIN LOGIN			      #edit line, not add!!!
     sasl_minimum_layer: 2				      #edit line, not add!!!, use 0 for web-cyradm
-    sasl_pwcheck_method: saslauthd      	  #add new line
+    pwcheck_method: authdaemond                 #add new line
+    authdaemond_path: /var/run/courier/authdaemon/socket    #add new line
+    log_level: 5                                            #add new line
     sasl_password_format: crypt               #add new line
     #virtdomains: yes                         #to disable adding @domain to authentication
                  
@@ -51,8 +53,7 @@ SMTP:
     tls_key_file: /etc/ssl/cyrus/server.pem
     tls_ca_file: /etc/ssl/cyrus/server.pem
     
-    #sasl_saslauthd_path: /var/spool/postfix/var/run/saslauthd/mux    # for web-cyradm
-    
+
 
 * generating server.pem: http://www.tldp.org/HOWTO/Postfix-Cyrus-Web-cyradm-HOWTO/cyrus-config.html or http://pastebin.com/raw.php?i=CU17QBuQ
 
@@ -116,7 +117,7 @@ SMTP:
 
 ##### 4) /etc/default/saslauthd
 
-    START=yes
+    START=no
     THREADS=10
     OPTIONS="-c -m /var/spool/postfix/var/run/saslauthd -r -t 3600"    #edit line, not add!!!
     #PARAMS="-c -m /var/spool/postfix/var/run/saslauthd"     #I think it isn't needed more
@@ -142,10 +143,11 @@ SMTP:
     
 ##### 6) /etc/postfix/sasl/smtpd.conf (create new file)
     
-    pwcheck_method: saslauthd
+    pwcheck_method: authdaemond
     mech_list: PLAIN LOGIN
+    authdaemond_path: /var/run/courier/authdaemon/socket
     
-##### 6a) /etc/pam.d/imap, /etc/pam.d/pop3, /etc/pam.d/pop, /etc/pam.d/sieve and /etc/pam.d/smtp (you can add verbose=1 for debug)
+##### 6a) [NO MORE NEEDED] /etc/pam.d/imap, /etc/pam.d/pop3, /etc/pam.d/pop, /etc/pam.d/sieve and /etc/pam.d/smtp (you can add verbose=1 for debug)
 
     auth required pam_mysql.so user=mail passwd=secret host=localhost db=mail table=accountuser usercolumn=username passwdcolumn=password crypt=1
         
@@ -154,7 +156,7 @@ SMTP:
     #it's possible add loging detail at end of rows above
     #logtable=log logmsgcolumn=msg logusercolumn=user loghostcolumn=host logpidcolumn=pid logtimecolumn=time
     
-##### 7) change saslauth location because postfix runs chrooted and permission to mysql folder
+##### 7) [NO MORE NEEDED] change saslauth location because postfix runs chrooted and permission to mysql folder
 
     rm -r /var/run/saslauthd/
     mkdir -p /var/spool/postfix/var/run/saslauthd 
@@ -190,6 +192,7 @@ SMTP:
     /etc/init.d/cyrus-imapd restart
     /etc/init.d/postfix restart
     /etc/init.d/saslauthd restart
+    /etc/init.d/courier-authdaemon restart
     
     
 ##### 10) some basic commands
