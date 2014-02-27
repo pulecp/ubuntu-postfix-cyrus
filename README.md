@@ -40,7 +40,7 @@ SMTP:
     unixhierarchysep: yes                     #edit line, not add (instead '.' use / in mailboxname)
     allowplaintext: yes				          #edit line, not add!!!
     sasl_mech_list: PLAIN LOGIN			      #edit line, not add!!!
-    sasl_minimum_layer: 2				      #edit line, not add!!!, use 0 for web-cyradm
+    sasl_minimum_layer: 0				      #edit line, not add!!!
     sasl_pwcheck_method: authdaemond          #add new line
     sasl_authdaemond_path: /var/run/courier/authdaemon/socket   #add new line
     log_level: 0                                              #add new line
@@ -115,16 +115,8 @@ SMTP:
 
     cp /root/ubuntu-postfix-cyrus/etc/postfix/* /etc/postfix
 
-##### 4) /etc/default/saslauthd
 
-    START=no
-    THREADS=10
-    OPTIONS="-c -m /var/spool/postfix/var/run/saslauthd -r -t 3600"    #edit line, not add!!!
-    #PARAMS="-c -m /var/spool/postfix/var/run/saslauthd"     #I think it isn't needed more
-    
--r due to use username+domain in SELECT query: http://pastebin.com/raw.php?i=Tx5KrxtN
-
-##### 5) /etc/postfix/master.cf (uncomment following, edit "argv=" parameter with path to deliver!!!, and comment what you don't need)
+##### 4) /etc/postfix/master.cf (uncomment following, edit "argv=" parameter with path to deliver!!!, and comment what you don't need)
 
     cyrus     unix  -       n       n       -       -       pipe                # change it!
   user=cyrus argv=/usr/sbin/cyrdeliver -e -r ${sender} -m ${extension} ${user}
@@ -141,13 +133,13 @@ SMTP:
 
     
     
-##### 6) /etc/postfix/sasl/smtpd.conf (create new file)
+##### 5) /etc/postfix/sasl/smtpd.conf (create new file)
     
     pwcheck_method: authdaemond
     mech_list: PLAIN LOGIN
     authdaemond_path: /var/run/courier/authdaemon/socket
     
-##### 6aa) /etc/courier/authdaemonrc
+##### 6) /etc/courier/authdaemonrc
 
     authmodulelist="authmysql authpam"
     daemons=5
@@ -156,7 +148,7 @@ SMTP:
     DEFAULTOPTIONS=""
     LOGGEROPTS=""
 
-##### 6ab) /etc/courier/authmysqlrc
+##### 6a) /etc/courier/authmysqlrc
 
     MYSQL_SERVER            localhost
     MYSQL_USERNAME          some_name
@@ -171,16 +163,16 @@ SMTP:
     MYSQL_GID_FIELD         5000
     MYSQL_HOME_FIELD        10
     
-##### 6ac) add /etc/fstab (mount --bind /run /var/spool/postfix/var/run)
+##### ab) add /etc/fstab (mount --bind /run /var/spool/postfix/var/run)
 
     /run /var/spool/postfix/var/run none bind 0 0
     
-##### 6ad) edit /etc/init.d/courier-authdaemon (add eXecute perm to /var/run/courier/authdaemon by changing perm to folder)
+##### 6c) edit /etc/init.d/courier-authdaemon (add eXecute perm to /var/run/courier/authdaemon by changing perm to folder)
 
     mkdir -m 0751 $rundir       #instead 0750
     
     
-##### 6a) [NO MORE NEEDED] /etc/pam.d/imap, /etc/pam.d/pop3, /etc/pam.d/pop, /etc/pam.d/sieve and /etc/pam.d/smtp (you can add verbose=1 for debug)
+##### 6d) [NO MORE NEEDED] ~~/etc/pam.d/imap, /etc/pam.d/pop3, /etc/pam.d/pop, /etc/pam.d/sieve and /etc/pam.d/smtp (you can add verbose=1 for debug)~~
 
     auth required pam_mysql.so user=mail passwd=secret host=localhost db=mail table=accountuser usercolumn=username passwdcolumn=password crypt=1
         
@@ -189,7 +181,7 @@ SMTP:
     #it's possible add loging detail at end of rows above
     #logtable=log logmsgcolumn=msg logusercolumn=user loghostcolumn=host logpidcolumn=pid logtimecolumn=time
     
-##### 7) [NO MORE NEEDED] change saslauth location because postfix runs chrooted and permission to mysql folder
+##### 6e) [NO MORE NEEDED] ~~change saslauth location because postfix runs chrooted and permission to mysql folder~~
 
     rm -r /var/run/saslauthd/
     mkdir -p /var/spool/postfix/var/run/saslauthd 
@@ -201,30 +193,16 @@ SMTP:
     newaliases                                              #creates /etc/aliases.db (it's necessary even if is not using) more: http://www.alanpinnt.com/2011/08/31/postfix-etcaliases-db-missing-newaliases-not-working/
 
 
-##### 8) change cyrus admin password (same in web-cyradm config)
+##### 7) change cyrus admin password (same in web-cyradm config)
 
     saslpasswd2 -c cyrus
     passwd cyrus
     
-##### 8a) hack saslauthd to create symlink on every start, edit function do_startall in /etc/init.d/saslauthd
 
-    do_startall()
-    {
-            for instance in $DEFAULT_FILES
-            do
-                    start_instance $instance
-            done
-            #added by kayn to fix missing symlink after reboot
-            ln -s /var/spool/postfix/var/run/saslauthd /var/run/saslauthd > /dev/null 2>&1
-    }
-
-    
-    
-##### 9) restart services
+##### 8) restart services
 
     /etc/init.d/cyrus-imapd restart
     /etc/init.d/postfix restart
-    /etc/init.d/saslauthd restart
     /etc/init.d/courier-authdaemon restart
     
     
@@ -312,7 +290,6 @@ SMTP:
     /etc/init.d/cyrus-imapd restart
     /etc/init.d/mysql restart
     /etc/init.d/postfix restart
-    /etc/init.d/saslauthd restart
     /etc/init.d/apache2 restart
 
     
@@ -325,12 +302,5 @@ After add new user, you have to add his mailbox manually by (or I think is suffi
     cyradm -u cyrus localhost
     cm user.your_mail_name@your_domain.com
 
-
-
-
-##### At the end what maybe help you (but if all is working, not do it)
-
-    ln -s /var/run/mysqld/mysqld.sock /tmp/mysql.sock
-    echo "pwcheck_method: saslauthd" > /usr/lib/sasl2/smtpd.conf
 
 Possible missing packages: php-db
