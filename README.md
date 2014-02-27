@@ -170,6 +170,10 @@ SMTP:
     MYSQL_UID_FIELD         5000
     MYSQL_GID_FIELD         5000
     MYSQL_HOME_FIELD        10
+    
+##### 6ac) add /etc/fstab (mount --bind /var/run /var/spool/postfix/var/run)
+
+    /var/run /var/spool/postfix/var/run none bind 0 0
 
     
 ##### 6a) [NO MORE NEEDED] /etc/pam.d/imap, /etc/pam.d/pop3, /etc/pam.d/pop, /etc/pam.d/sieve and /etc/pam.d/smtp (you can add verbose=1 for debug)
