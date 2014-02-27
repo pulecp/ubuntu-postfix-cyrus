@@ -30,6 +30,11 @@ SMTP:
 
 ##### 1) apt-get -y install cyrus-admin cyrus-clients cyrus-imapd cyrus-pop3d cyrus-nntpd sasl2-bin postfix mysql-server mysql-client libpam-mysql postfix-mysql courier-authlib courier-authdaemon courier-authlib-mysql
 
+##### 1a) Disable saslauthd
+
+    /etc/init.d/saslauthd stop
+    update-rc.d -f saslauthd remove
+
 ### Edit following configuration files
 
 ##### 1) /etc/imapd.conf
