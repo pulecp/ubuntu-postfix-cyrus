@@ -176,7 +176,11 @@ SMTP:
 ##### 6ac) add /etc/fstab (mount --bind /var/run /var/spool/postfix/var/run)
 
     /var/run /var/spool/postfix/var/run none bind 0 0
+    
+##### 6ad) edit /etc/init.d/courier-authdaemon (add eXecute perm to /var/run/courier/authdaemon by changing perm to folder)
 
+    mkdir -m 0751 $rundir       #instead 0750
+    
     
 ##### 6a) [NO MORE NEEDED] /etc/pam.d/imap, /etc/pam.d/pop3, /etc/pam.d/pop, /etc/pam.d/sieve and /etc/pam.d/smtp (you can add verbose=1 for debug)
 
