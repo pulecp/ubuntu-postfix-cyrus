@@ -42,8 +42,10 @@ SMTP:
     sasl_mech_list: PLAIN LOGIN			      #edit line, not add!!!
     sasl_minimum_layer: 2				      #edit line, not add!!!, use 0 for web-cyradm
     pwcheck_method: authdaemond                 #add new line
-    authdaemond_path: /var/run/courier/authdaemon/socket    #add new line
-    log_level: 5                                            #add new line
+    sasl_pwcheck_method: authdaemond
+    authdaemond_path: /var/run/courier/authdaemon/socket        #add new line
+    sasl_authdaemond_path: /var/run/courier/authdaemon/socket   #add new line
+    log_level: 5                                              #add new line
     sasl_password_format: crypt               #add new line
     #virtdomains: yes                         #to disable adding @domain to authentication
                  
